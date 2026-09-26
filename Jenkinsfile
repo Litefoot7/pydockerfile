@@ -32,9 +32,11 @@ pipeline {
     steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             sh '''
-                docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                docker tag $IMAGE_NAME:$BUILD_NUMBER $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
-                docker push $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
+                DOCKER_PASS_CLEAN=$(echo "$DOCKER_PASS" | tr -d '[:space:]')
+                DOCKER_USER_CLEAN=$(echo "$DOCKER_USER" | tr -d '[:space:]')
+                docker login -u "$DOCKER_USER_CLEAN" -p "$DOCKER_PASS_CLEAN"
+                docker tag $IMAGE_NAME:$BUILD_NUMBER $DOCKER_USER_CLEAN/$IMAGE_NAME:$BUILD_NUMBER
+                docker push $DOCKER_USER_CLEAN/$IMAGE_NAME:$BUILD_NUMBER
             '''
         }
     }
