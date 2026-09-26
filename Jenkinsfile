@@ -35,6 +35,7 @@ pipeline {
                 rm -f ~/.docker/config.json
                 DOCKER_PASS_CLEAN=$(echo "$DOCKER_PASS" | tr -d '[:space:]')
                 DOCKER_USER_CLEAN=$(echo "$DOCKER_USER" | tr -d '[:space:]')
+                'echo -n "$DOCKER_PASS_CLEAN" | wc -c'
                 docker login -u "$DOCKER_USER_CLEAN" -p "$DOCKER_PASS_CLEAN"
                 docker tag $IMAGE_NAME:$BUILD_NUMBER $DOCKER_USER_CLEAN/$IMAGE_NAME:$BUILD_NUMBER
                 docker push $DOCKER_USER_CLEAN/$IMAGE_NAME:$BUILD_NUMBER
