@@ -32,6 +32,7 @@ pipeline {
     steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
             sh '''
+                rm -f ~/.docker/config.json
                 DOCKER_PASS_CLEAN=$(echo "$DOCKER_PASS" | tr -d '[:space:]')
                 DOCKER_USER_CLEAN=$(echo "$DOCKER_USER" | tr -d '[:space:]')
                 docker login -u "$DOCKER_USER_CLEAN" -p "$DOCKER_PASS_CLEAN"
