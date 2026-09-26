@@ -29,16 +29,16 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker tag $IMAGE_NAME:$BUILD_NUMBER $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
-                        docker push $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
-                    '''
-                }
-            }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh '''
+                docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+                docker tag $IMAGE_NAME:$BUILD_NUMBER $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
+                docker push $DOCKER_USER/$IMAGE_NAME:$BUILD_NUMBER
+            '''
         }
+    }
+}
 
         stage('Test') {
             steps {
